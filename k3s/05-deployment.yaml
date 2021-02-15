@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sealed-secrets-example-deployment
+  namespace: foo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sealed-secrets-example
+  template:
+    metadata:
+      labels: # labels to select/identify the deployment
+        app: sealed-secrets-example
+    spec:     # pod spec                  
+      containers: 
+      - name: sealed-secrets-example
+        image: wingkwong/sealed-secrets-example:latest # image we pushed
+        ports:
+        - containerPort: 8080
+        env:
+        - name: TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: token
+              name: credentials
